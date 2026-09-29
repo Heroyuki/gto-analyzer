@@ -1,43 +1,59 @@
 # gto-analyzer
 
-GG Pokerのハンド履歴テキストを解析し、GPTでレビューするための最小構成アプリです。
+GG PokerのMTT履歴を解析し、ハンド単位でレビューするWebアプリを開発します。
+**現在は設計とTypeScript開発基盤の段階**です。認証、AWS、MTT解析、本番UIは未実装です。
 
-## セットアップ
+## 仕様から開発を始める
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+[ドキュメント入口](docs/README.md) → [要件](docs/REQUIREMENTS.md) → [設計](docs/architecture/DESIGN.md) → [機能別仕様](docs/specs/README.md) の順に確認します。
+[開発手順](CONTRIBUTING.md)に従い、受入条件・テスト・実装を同じ変更で揃えます。
+
+```text
+docs/
+  REQUIREMENTS.md       要件の正本
+  architecture/        全体設計・decisions/に技術判断（ADR）
+  specs/               機能別仕様・受入条件
+  learning/            Notion学習資料の計画
+apps/
+  web/                 React SPAの配置先
+  api/                 API Lambdaの配置先
+  workers/             非同期Lambdaの配置先
+packages/
+  contracts/           共有型（現在は状態・根拠種別のみ）
+  domain/              局面再構成・計算の配置先
+  parser/              MTTパーサーの配置先
+infra/                 AWS CDKの配置先
+tests/
+  acceptance/          横断受入テストの配置先
+  fixtures/            匿名化履歴・期待結果の配置先
+legacy/python/         既存Streamlit試作・既存テスト
 ```
 
-## 1) 履歴解析スクリプト
+配置先には責務を説明するREADMEを置いています。実装・依存パッケージは機能ごとに追加します。
+
+## TypeScript開発基盤
+
+Node.js 22、npmを使用します。nvmを使う場合は `nvm use` で切り替えます。
 
 ```bash
-python src/gg_history_parser.py ./your_history.txt --output hands.json
+npm ci
+npm run check
 ```
 
-- GG Pokerハンド履歴テキストを読み込み、JSONに変換します。
-- 出力JSONには以下を含みます。
-  - hand_id
-  - game
-  - sb / bb
-  - hero / hero_cards
-  - board
-  - actions（street, player, action, amount）
+npm workspaces、strict型検査、ロックファイル、CIを導入済みです。
+現在の `check` は型検査のみです。アプリの起動・ビルド・機能テストは各機能の実装時に追加します。
+TypeScript統一の理由と移行範囲は[ADR-0001](docs/architecture/decisions/0001-typescript.md)を参照してください。
 
-## 2) GPTレビューアプリ (Streamlit)
+## Python試作
+
+[試作の実行手順](legacy/python/README.md)を参照してください。元のコード・テストは移動して保存しています。
 
 ```bash
-export OPENAI_API_KEY="your_api_key"
-streamlit run src/review_app.py
+python3 -m pytest legacy/python/tests -q
 ```
 
-- .txtファイルをアップロードすると、自動で履歴をパース。
-- 「GPTでレビューする」を押すと、パース済みJSONをOpenAI APIへ渡してレビューを生成。
-- デフォルトモデルは `gpt-4.1-mini`（UIから変更可）。
+## 依存関係の更新
 
-## テスト
-
-```bash
-pytest -q
-```
+[Dependabot設定](.github/dependabot.yml)でnpm・Python試作・GitHub Actionsを毎週月曜09:00（日本時間）に確認します。
+設定をデフォルトブランチへ反映するとバージョン更新PRの対象になります。自動マージは設定していません。
+[GitHub公式説明](https://docs.github.com/en/code-security/concepts/supply-chain-security/about-the-dependabot-yml-file)

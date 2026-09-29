@@ -2,7 +2,7 @@ import json
 import re
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Optional
 
 
 HAND_SEPARATOR = re.compile(r"\n(?=Poker Hand #)")
@@ -13,7 +13,7 @@ class Action:
     street: str
     player: str
     action: str
-    amount: float | None = None
+    amount: Optional[float] = None
 
 
 @dataclass
@@ -22,10 +22,10 @@ class Hand:
     game: str
     sb: float
     bb: float
-    hero: str | None = None
-    hero_cards: list[str] = field(default_factory=list)
-    board: list[str] = field(default_factory=list)
-    actions: list[Action] = field(default_factory=list)
+    hero: Optional[str] = None
+    hero_cards: list = field(default_factory=list)
+    board: list = field(default_factory=list)
+    actions: list = field(default_factory=list)
 
 
 def _parse_stakes(line: str) -> tuple[float, float]:
@@ -35,7 +35,7 @@ def _parse_stakes(line: str) -> tuple[float, float]:
     return float(match.group(1)), float(match.group(2))
 
 
-def _parse_hero_and_cards(lines: Iterable[str]) -> tuple[str | None, list[str]]:
+def _parse_hero_and_cards(lines: Iterable[str]) -> tuple:
     hero = None
     cards: list[str] = []
     for line in lines:
@@ -73,12 +73,15 @@ def _parse_actions(lines: Iterable[str]) -> list[Action]:
             continue
 
         m = re.match(
-            r"^(?P<player>[^:]+): (?P<action>bets|calls|raises to|checks|folds)(?: \$(?P<amount>\d+(?:\.\d+)?))?",
+            r"^(?P<player>[^:]+): (?P<action>bets|calls|raises|checks|folds)"
+            r"(?: \$\d+(?:\.\d+)? to \$(?P<raise_to>\d+(?:\.\d+)?))?"
+            r"(?: \$(?P<amount>\d+(?:\.\d+)?))?",
             line,
         )
         if not m:
             continue
-        amount_str = m.group("amount")
+        # For "raises $X to $Y", use the final total (raise_to); otherwise use amount
+        amount_str = m.group("raise_to") or m.group("amount")
         actions.append(
             Action(
                 street=street,
@@ -97,7 +100,7 @@ def parse_hand_history(text: str) -> list[Hand]:
     for raw in raw_hands:
         lines = raw.splitlines()
         header = lines[0]
-        hand_id_match = re.search(r"Poker Hand #(\d+)", header)
+        hand_id_match = re.search(r"Poker Hand #([A-Z0-9]+)", header)
         game_match = re.search(r": (.+?) \(\$", header)
 
         hand_id = hand_id_match.group(1) if hand_id_match else "unknown"
@@ -123,7 +126,7 @@ def parse_hand_history(text: str) -> list[Hand]:
     return parsed
 
 
-def parse_file(input_path: str | Path, output_path: str | Path | None = None) -> list[Hand]:
+def parse_file(input_path, output_path=None):
     input_path = Path(input_path)
     hands = parse_hand_history(input_path.read_text(encoding="utf-8"))
     if output_path:
