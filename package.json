@@ -13,7 +13,10 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck"
+    "check": "npm run typecheck && npm run check:spot && npm run test:spot",
+    "dev:spot": "npm --prefix legacy/poker-spot run dev",
+    "check:spot": "npm --prefix legacy/poker-spot run check",
+    "test:spot": "npm --prefix legacy/poker-spot test"
   },
   "devDependencies": {
     "typescript": "~5.9.3"

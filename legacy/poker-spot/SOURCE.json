@@ -1,0 +1,23 @@
+{
+  "url": "https://poker-spot-lab.heroyuki.chatgpt.site/",
+  "commit": "5b2f88971d0dd1537b7849ce79d53220e1e6d877",
+  "importedOn": "2026-10-03",
+  "files": {
+    "dist/app.js": {
+      "destination": "public/app.js",
+      "sha256": "ed81db10f285588c95de622d9b2cd0a64f9fe4cdb22180523469abe9faeb14d1"
+    },
+    "dist/core.js": {
+      "destination": "public/core.js",
+      "sha256": "f154a5097a64d1bfb51b415cc7ba8e24e709a88e992436c611033c7fe55773f5"
+    },
+    "dist/index.html": {
+      "destination": "public/index.html",
+      "sha256": "987274ed320c03d668c9cc75b97e003023f219736d5359188ba291c70c646286"
+    },
+    "dist/style.css": {
+      "destination": "public/style.css",
+      "sha256": "9eee9156c7342d2c1001b546afa30283853c6c2c71acdfa72cc62b8813c6b09d"
+    }
+  }
+}

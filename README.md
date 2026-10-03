@@ -3,6 +3,10 @@
 GG PokerのMTT履歴を解析し、ハンド単位でレビューするWebアプリを開発します。
 **現在は設計とTypeScript開発基盤の段階**です。認証、AWS、MTT解析、本番UIは未実装です。
 
+## Poker Spot VisualizerのAWS移行
+
+既存の学習サイトをこのリポジトリに取り込み、AWSで動作確認するための[移行設計](docs/architecture/POKER_SPOT_AWS.md)と[受入仕様](docs/specs/SPOT-001-visualizer.md)を追加しました。サイトのソースは `legacy/poker-spot` に取り込み済みです。`npm run dev:spot` でローカル起動できます。AWSデプロイは未実施です。
+
 ## 仕様から開発を始める
 
 [ドキュメント入口](docs/README.md) → [要件](docs/REQUIREMENTS.md) → [設計](docs/architecture/DESIGN.md) → [機能別仕様](docs/specs/README.md) の順に確認します。
@@ -41,7 +45,7 @@ npm run check
 ```
 
 npm workspaces、strict型検査、ロックファイル、CIを導入済みです。
-現在の `check` は型検査のみです。アプリの起動・ビルド・機能テストは各機能の実装時に追加します。
+現在の `check` は型検査と学習用サイトの構文検査・既存6テストです。アプリの起動・ビルド・機能テストは各機能の実装時に追加します。
 TypeScript統一の理由と移行範囲は[ADR-0001](docs/architecture/decisions/0001-typescript.md)を参照してください。
 
 ## Python試作

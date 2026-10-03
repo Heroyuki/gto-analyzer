@@ -68,3 +68,9 @@ DB以外の個別サービスと詳細設定は設計時に確定する。
 ## 現状
 
 既存コードは `legacy/python/` に保存したStreamlitでの履歴解析・GPTレビューの試作。新規本番実装は[ADR-0001](architecture/decisions/0001-typescript.md)に従いTypeScriptに統一し、現在は開発基盤のみを整備済み。上記のAWS構成、認証、DynamoDBによる永続化が実装済みであることを意味しない。
+
+## 学習画面のGit管理・AWS移行
+
+2026-10-03追加: 現行のPoker Spot Visualizerを `Heroyuki/gto-analyzer` に取り込み、AWS上で動作確認できるようにする。まず設計を整備し、ローカル確認とAWS dev構築を段階的に行う。現行URLはOpenAI Sitesであり、AWS構築済みとは扱わない。詳細は[移行設計](architecture/POKER_SPOT_AWS.md)と[SPOT-001](specs/SPOT-001-visualizer.md)を参照する。
+
+現行の所有者限定という共有意図を維持する。学習用の説明頻度をGTO計算結果と混同させない。AWSアカウント、検証環境の閲覧制限、予算などは設計案と確定事項を分けて管理する。
