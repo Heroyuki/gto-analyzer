@@ -12,6 +12,8 @@ SPOT-001の第1段階を独立して実施する。既存サイトのHTML/CSS/Ja
 
 ## アーキテクチャ図：今回の取り込み
 
+[draw.io形式](../architecture/diagrams/gto-analyzer.drawio)の「Git取り込み」「学習画面 AWS dev」ページに編集可能な図を収録しています。
+
 ```mermaid
 flowchart LR
   S[既存Sites Git] -->|ソース取得・SHA記録| T[一時チェックアウト]

@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" agent="Codex" version="24.7.17" type="device">
+  <diagram id="mtt" name="MTT全体構成">
+    <mxGraphModel dx="1400" dy="950" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="950" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e0" value="画面取得" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="browser" target="cf">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e1" value="OAC" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="cf" target="static">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e2" value="ログイン" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="browser" target="cognito">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e3" value="JWT / HTTPS" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="browser" target="api">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="api" target="lambda">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e5" value="所有者別アクセス" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="lambda" target="db">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e6" value="署名付きPOST" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="browser" target="quarantine">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e7" value="Streams" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="db" target="dispatch">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e8" value="outbox配信" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="dispatch" target="queue">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e9" value="非同期実行" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="queue" target="worker">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e10" value="状態・fence検証" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="worker" target="db">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e11" value="固定version取得" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="worker" target="quarantine">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e12" value="原本・成果物" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="worker" target="artifacts">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e13" value="レビュー要求" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="worker" target="llm">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e14" value="資料参照" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="worker" target="catalog">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e15" value="候補照会" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;dashed=1;" edge="1" parent="1" source="recover" target="db">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e16" value="再投入" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;dashed=1;" edge="1" parent="1" source="recover" target="queue">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="title" value="GG Poker MTTレビュー — AWSアーキテクチャ" style="text;html=0;align=left;verticalAlign=middle;fontSize=26;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="25" width="1300" height="40" />
+        </mxCell>
+        <mxCell id="subtitle" value="設計上の構成。実線は利用時の通信・処理、破線は運用・設定。静的配信と履歴保存を分離する。" style="text;html=0;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=14;fontColor=#475569;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="75" width="1300" height="50" />
+        </mxCell>
+        <mxCell id="browser" value="ブラウザー&#10;React SPA" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.client;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="113.0" y="300" width="64" height="64" />
+        </mxCell>
+        <mxCell id="cf" value="CloudFront&#10;HTTPS / OAC" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudfront;fillColor=#8C4FFF;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="393.0" y="160" width="64" height="64" />
+        </mxCell>
+        <mxCell id="static" value="S3 / 静的成果物&#10;非公開バケット" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;fillColor=#7AA116;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="673.0" y="160" width="64" height="64" />
+        </mxCell>
+        <mxCell id="cognito" value="Cognito&#10;Authorization Code + PKCE" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cognito;fillColor=#DD344C;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="113.0" y="160" width="64" height="64" />
+        </mxCell>
+        <mxCell id="api" value="API Gateway HTTP API&#10;JWT authorizer" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.api_gateway;fillColor=#8C4FFF;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="393.0" y="300" width="64" height="64" />
+        </mxCell>
+        <mxCell id="lambda" value="API Lambda&#10;所有者認可" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;fillColor=#ED7100;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="673.0" y="300" width="64" height="64" />
+        </mxCell>
+        <mxCell id="db" value="DynamoDB&#10;Account / Upload / Job / Outbox" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.dynamodb;fillColor=#C925D1;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="988.0" y="300" width="64" height="64" />
+        </mxCell>
+        <mxCell id="quarantine" value="S3 / quarantine&#10;非公開・VersionId固定" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;fillColor=#7AA116;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="123.0" y="520" width="64" height="64" />
+        </mxCell>
+        <mxCell id="dispatch" value="Dispatcher Lambda&#10;DynamoDB Streams" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;fillColor=#ED7100;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="988.0" y="450" width="64" height="64" />
+        </mxCell>
+        <mxCell id="queue" value="SQS + DLQ&#10;parse / review / delete" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sqs;fillColor=#E7157B;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="988.0" y="610" width="64" height="64" />
+        </mxCell>
+        <mxCell id="worker" value="Worker Lambda&#10;parse / review / delete" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;fillColor=#ED7100;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="678.0" y="610" width="64" height="64" />
+        </mxCell>
+        <mxCell id="artifacts" value="S3 / accepted・artifacts&#10;非公開・固定参照" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;fillColor=#7AA116;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="383.0" y="610" width="64" height="64" />
+        </mxCell>
+        <mxCell id="llm" value="外部LLM API&#10;匿名化された局面のみ" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.external_toolkit;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="383.0" y="790" width="64" height="64" />
+        </mxCell>
+        <mxCell id="catalog" value="承認済み学習カタログ&#10;バージョン固定" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.documents;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="678.0" y="790" width="64" height="64" />
+        </mxCell>
+        <mxCell id="recover" value="EventBridge / 復旧Lambda&#10;PendingWork参照・再投入" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.eventbridge;fillColor=#E7157B;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1233.0" y="450" width="64" height="64" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="import" name="Git取り込み">
+    <mxGraphModel dx="1400" dy="950" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="950" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e0" value="ソース取得" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="sites" target="temp">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e1" value="対象ファイルのみ" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="temp" target="repo">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="repo" target="public">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="repo" target="tests">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e4" value="出典記録" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="repo" target="source">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e5" value="npm run dev:spot" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="public" target="http">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e6" value="HTTP" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="http" target="browser">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e7" value="npm run check" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="tests" target="ci">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="title" value="Poker Spot Visualizer — Git取り込み構成" style="text;html=0;align=left;verticalAlign=middle;fontSize=26;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="25" width="1300" height="40" />
+        </mxCell>
+        <mxCell id="subtitle" value="既存アプリの比較用ソースを保存する。Sites設定・内側の.git・認証情報はコピーしない。" style="text;html=0;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=14;fontColor=#475569;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="75" width="1300" height="50" />
+        </mxCell>
+        <mxCell id="sites" value="Sites Git&#10;既存サイトのソース" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.git_repository;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="133.0" y="230" width="64" height="64" />
+        </mxCell>
+        <mxCell id="temp" value="一時チェックアウト&#10;取得元SHAを確認" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.documents;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="423.0" y="230" width="64" height="64" />
+        </mxCell>
+        <mxCell id="repo" value="gto-analyzer&#10;legacy/poker-spot" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.git_repository;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="738.0" y="230" width="64" height="64" />
+        </mxCell>
+        <mxCell id="public" value="public/&#10;HTML・CSS・JavaScript" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.documents;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="738.0" y="440" width="64" height="64" />
+        </mxCell>
+        <mxCell id="tests" value="tests/&#10;既存6テスト" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.document;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1088.0" y="440" width="64" height="64" />
+        </mxCell>
+        <mxCell id="http" value="ローカル静的サーバー&#10;127.0.0.1:8000" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.external_toolkit;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="438.0" y="610" width="64" height="64" />
+        </mxCell>
+        <mxCell id="browser" value="ブラウザー&#10;局面操作・JSON入出力" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.client;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="148.0" y="610" width="64" height="64" />
+        </mxCell>
+        <mxCell id="ci" value="GitHub Actions&#10;型検査・構文検査・テスト" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.external_toolkit;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1088.0" y="610" width="64" height="64" />
+        </mxCell>
+        <mxCell id="source" value="SOURCE.json&#10;取得元SHA・ファイルハッシュ" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.document;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1088.0" y="230" width="64" height="64" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="aws-dev" name="学習画面 AWS dev">
+    <mxGraphModel dx="1400" dy="950" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="950" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e0" value="対象SHA" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="git" target="ci">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e1" value="短期認証" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ci" target="role">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e2" value="最小権限" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="role" target="cdk">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e3" value="設定" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;dashed=1;" edge="1" parent="1" source="cdk" target="cf">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e4" value="成果物配信" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;dashed=1;" edge="1" parent="1" source="cdk" target="s3">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e5" value="HTTPS" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="viewer" target="cf">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e6" value="OAC / REST origin" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="cf" target="s3">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;endArrow=block;endFill=1;strokeColor=#475569;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="viewer" target="local">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="title" value="Poker Spot Visualizer — AWS dev構成案" style="text;html=0;align=left;verticalAlign=middle;fontSize=26;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="25" width="1300" height="40" />
+        </mxCell>
+        <mxCell id="subtitle" value="後続の移行先。閲覧制限方式は別途確定する。OACはS3へのアクセス制限であり、本人認証ではない。" style="text;html=0;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=14;fontColor=#475569;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="75" width="1300" height="50" />
+        </mxCell>
+        <mxCell id="git" value="GitHub&#10;検証済みコミット" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.git_repository;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="143.0" y="220" width="64" height="64" />
+        </mxCell>
+        <mxCell id="ci" value="GitHub Actions&#10;テスト・ビルド" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.external_toolkit;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="443.0" y="220" width="64" height="64" />
+        </mxCell>
+        <mxCell id="role" value="IAMデプロイロール&#10;GitHub OIDC" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.identity_and_access_management;fillColor=#DD344C;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="758.0" y="220" width="64" height="64" />
+        </mxCell>
+        <mxCell id="cdk" value="CDK / 配信処理&#10;AWS dev" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.external_toolkit;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1108.0" y="220" width="64" height="64" />
+        </mxCell>
+        <mxCell id="viewer" value="許可された検証端末&#10;サンプルデータで確認" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.client;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="148.0" y="550" width="64" height="64" />
+        </mxCell>
+        <mxCell id="cf" value="CloudFront&#10;HTTPS / 閲覧制限" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudfront;fillColor=#8C4FFF;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="553.0" y="550" width="64" height="64" />
+        </mxCell>
+        <mxCell id="s3" value="S3 / web成果物&#10;Block Public Access" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;fillColor=#7AA116;strokeColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1108.0" y="550" width="64" height="64" />
+        </mxCell>
+        <mxCell id="local" value="ブラウザー内で計算&#10;JSON取込・書出し（端末内）" style="outlineConnect=0;html=0;whiteSpace=wrap;align=center;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;fontSize=14;fontColor=#0f172a;spacingTop=10;labelWidth=240;shape=mxgraph.aws4.document;fillColor=#475569;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="178.0" y="740" width="64" height="64" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
