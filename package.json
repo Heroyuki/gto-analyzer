@@ -9,16 +9,26 @@
     "infra"
   ],
   "engines": {
-    "node": ">=22"
+    "node": ">=22.12"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm run check:spot && npm run test:spot",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p infra/tsconfig.json",
+    "check": "npm run typecheck && npm run check:spot && npm run test:spot && npm run test:unit && npm run build:web && npm run test:web",
     "dev:spot": "npm --prefix legacy/poker-spot run dev",
     "check:spot": "npm --prefix legacy/poker-spot run check",
-    "test:spot": "npm --prefix legacy/poker-spot test"
+    "test:spot": "npm --prefix legacy/poker-spot test",
+    "dev:web": "npm run dev --workspace @gto-analyzer/web --",
+    "build:web": "npm run build --workspace @gto-analyzer/web",
+    "test:unit": "node --import tsx --test packages/*/tests/*.test.ts infra/tests/*.test.ts scripts/tests/*.test.ts",
+    "test:web": "playwright test",
+    "synth:dev": "cdk synth --app \"node --import tsx infra/src/app.ts\"",
+    "deploy:web": "node --import tsx scripts/publish-web.ts",
+    "smoke:aws": "node --import tsx scripts/smoke-web.ts"
   },
   "devDependencies": {
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "tsx": "^4.20.0",
+    "@types/node": "^22.0.0",
+    "@playwright/test": "^1.55.0"
   }
 }

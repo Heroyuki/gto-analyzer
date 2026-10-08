@@ -14,7 +14,7 @@
 ## コードの配置と依存方向
 
 - `apps/web`、`apps/api`、`apps/workers`: 実行単位。アプリ同士を直接importしない。
-- `packages/contracts`: API/ジョブの共通契約。アプリやAWS SDKに依存させない。現在は型のみ。外部入力の実行時検証は実装時に追加する。
+- `packages/contracts`: API/ジョブの共通契約。アプリやAWS SDKに依存させない。学習画面のJSON契約には外部入力の実行時検証を実装済み。
 - `packages/domain`: 局面・整数チップ計算。AWSやUIに依存させない。
 - `packages/parser`: 履歴の形式検証と正規化。contracts/domainを利用できる。
 - `infra`: TypeScript CDK。スタック・IAM・デプロイ設定を配置する。
@@ -32,5 +32,5 @@ python3 -m pytest legacy/python/tests -q
 git diff --check
 ```
 
-CIはTypeScript型検査とPython試作テストを実行する。新規機能を追加したら対応するテストコマンドをCIにも追加する。MTT・認可・AWS統合試験の完了を現在のCI成功から推定しない。
+CIはTypeScript型検査、学習画面の単体・Chromium受入テスト、Webビルド、架空dev設定でのCDK synthとPython試作テストを実行する。新規機能を追加したら対応するテストコマンドをCIにも追加する。MTT・認可・AWS統合試験の完了を現在のCI成功から推定しない。
 実データをfixtureにする前にプレイヤー名・個人情報を匿名化し、APIキーや生の履歴をコミットしない。

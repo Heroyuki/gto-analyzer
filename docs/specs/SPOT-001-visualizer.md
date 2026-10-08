@@ -1,10 +1,10 @@
 # SPOT-001: 学習用局面ビジュアライザーのGit・AWS移行
 
-- 状態: Draft
+- 状態: Implemented（ローカル受入検証済み／AWS受入未実施）
 - 関連要件: [要件・学習画面移行](../REQUIREMENTS.md#学習画面のgit管理aws移行)
 - 関連設計: [移行設計](../architecture/POKER_SPOT_AWS.md)
-- 実装予定先: legacy/poker-spot、apps/web、packages/domain、packages/contracts、infra
-- テスト予定先: 各パッケージのtests、tests/acceptance
+- 実装先: legacy/poker-spot、apps/web、packages/domain、packages/contracts、infra、scripts
+- テスト先: 各パッケージのtests、tests/acceptance、infra/tests、scripts/tests
 
 ## 目的・対象外
 
@@ -33,8 +33,23 @@ v1 JSONからボード3〜5枚、Hero2枚、正のポット、非負の残りス
 
 ## 未確定事項
 
-AWSアカウント・許可IP・予算・数値精度は移行設計の未確定項目を参照。確定後Readyへ変更する。
+AWSの許可IP・予算・通知先はデプロイ前に確定する。東京リージョンは確認済み。数値精度は移植コードの初期値としてbb小数3桁、ベット率／頻度小数2桁、ベット額0.001 bb未満切捨てを採用した。ユーザー合意済み要件とは区別する。
 
 ## 検証記録
 
 2026-10-03: 移行元コミット `5b2f88971d0dd1537b7849ce79d53220e1e6d877` の既存6テストと構文検査成功。取込後・移植後・AWSの受入条件は未実施。
+
+2026-10-04:
+
+- AC01: 元ソースの構文検査・6テスト成功。
+- AC02/03: 固定小数計算の単体試験とブラウザー入力・all-in・ゼロstack操作成功。
+- AC04: カード選択・重複無効化・turn／river追加削除・役分類・Escape復帰成功。
+- AC05/06: v1 roundtrip、不正構文／version／カード／数値／頻度拒否、UTF-8バイト上限、失敗時元局面保持を検証。
+- AC07: BB対面bet不一致を表示・書出しから除外（BTNの有効戦略は保持）、条件復帰時再表示を確認。
+- AC08: demoとsolver自己申告を区別して表示することを確認。
+- AC09: Chromiumで390px／1440px・文字200%の入力とJSONダイアログ操作、横溢れなし、キーボードでカードダイアログ開閉・復帰を検証。全操作の手動監査・他ブラウザーは未実施。
+- AC12: JSON取込・ダウンロード中にネットワークリクエストが発生しないことを確認。
+- 型検査、既存6、新規単体13、Chromium6、Python19テスト、Webビルド、架空設定のCDK synth成功。
+- AC10/11: CDKテンプレート／IP関数／OIDC条件／成果物manifestのローカル試験成功。AWS HTTPS・S3拒否・未許可回線・実復旧は未実施。
+
+`Verified`には変更しない。AWS実設定・デプロイ・smoke・復旧受入が残る。詳しい手順と依存の既知事項は[infra README](../../infra/README.md)参照。

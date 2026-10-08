@@ -14,7 +14,9 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - run: npx playwright install --with-deps chromium
       - run: npm run check
+      - run: npm run synth:dev -- -c config=infra/dev.example.json --no-lookups --quiet
   legacy-python:
     runs-on: ubuntu-latest
     defaults:

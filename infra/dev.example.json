@@ -1,0 +1,7 @@
+{
+  "account": "000000000000",
+  "region": "ap-northeast-1",
+  "allowedIps": ["203.0.113.10"],
+  "monthlyBudgetUsd": 10,
+  "budgetEmail": "replace-me@example.com"
+}

@@ -8,12 +8,17 @@
     "exactOptionalPropertyTypes": true,
     "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "skipLibCheck": true
   },
   "include": [
     "packages/**/*.ts",
     "apps/**/*.ts",
-    "infra/**/*.ts"
+    "apps/**/*.tsx",
+    "playwright.config.ts",
+    "scripts/**/*.ts",
+    "tests/acceptance/**/*.ts"
   ],
   "exclude": [
     "node_modules",

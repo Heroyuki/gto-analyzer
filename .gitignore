@@ -11,3 +11,7 @@ cdk.out/
 .env.*
 !.env.example
 .DS_Store
+playwright-report/
+test-results/
+infra/dev.local.json
+infra/cdk-outputs.json

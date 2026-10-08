@@ -24,6 +24,8 @@
 
 ## 3. 構成
 
+[draw.io形式のアーキテクチャ図](diagrams/gto-analyzer.drawio)の「MTT全体構成」ページで構成を編集できます。
+
 ```mermaid
 flowchart LR
   U[Browser] --> CF[CloudFront + private S3 / SPA]
@@ -207,3 +209,7 @@ UI性能案は一覧/詳細API p95 1秒以内（負荷・cold start別計測）�
 ## 16. 学習画面の先行移行（2026-10-03）
 
 [Poker Spot Visualizerの移行設計](POKER_SPOT_AWS.md)に従い、既存Sitesの学習画面をGitへ取り込み、React/TypeScriptへ移植してS3 + CloudFrontのAWS devで検証する。この作業は§14のMTT実装と独立して先行できる。学習画面の配信成功を、履歴解析・認証・アカウント分離の完了とは扱わない。履歴・ユーザーデータを扱う際は本設計の認証、認可、API、永続化を適用する。
+
+### 共通Web基盤の実装（2026-10-04）
+
+学習画面とMTTレビュー画面は同じReact SPA／S3／CloudFrontへ統合する。学習画面を最初の機能として`apps/web/src/features/spot`へ実装し、JSON契約を`packages/contracts`、計算を`packages/domain`へ分離した。`infra`に共通Web dev配信のCDKを追加した。後続のCognito・API・DynamoDB・機密履歴用S3・workerは同じアプリの基盤へ追加する。レビュー機能およびAWSリソース作成は未実施。学習画面のIP許可はアカウント認証の代替にはしない。

@@ -1,11 +1,11 @@
 # gto-analyzer
 
 GG PokerのMTT履歴を解析し、ハンド単位でレビューするWebアプリを開発します。
-**現在は設計とTypeScript開発基盤の段階**です。認証、AWS、MTT解析、本番UIは未実装です。
+**学習画面のReact／TypeScript移植とAWS dev配信コードを実装済み**です。AWSリソース作成、認証、MTT解析、レビューAPIは未実施です。
 
 ## Poker Spot VisualizerのAWS移行
 
-既存の学習サイトをこのリポジトリに取り込み、AWSで動作確認するための[移行設計](docs/architecture/POKER_SPOT_AWS.md)と[受入仕様](docs/specs/SPOT-001-visualizer.md)を追加しました。サイトのソースは `legacy/poker-spot` に取り込み済みです。`npm run dev:spot` でローカル起動できます。AWSデプロイは未実施です。
+既存の学習サイトをこのリポジトリに取り込み、React／TypeScriptへ移植しました。React版は `npm run dev:web`、比較用の元ソースは `npm run dev:spot` で起動できます。学習画面とレビュー画面は同じWebアプリ／配信基盤へ統合する方針です。[AWS構築・配信・復旧手順](infra/README.md)を実装し、AWSデプロイは設定確定待ちです。[移行設計](docs/architecture/POKER_SPOT_AWS.md)と[受入仕様](docs/specs/SPOT-001-visualizer.md)を参照してください。
 
 ## 仕様から開発を始める
 
@@ -19,25 +19,25 @@ docs/
   specs/               機能別仕様・受入条件
   learning/            Notion学習資料の計画
 apps/
-  web/                 React SPAの配置先
+  web/                 React SPA・学習画面
   api/                 API Lambdaの配置先
   workers/             非同期Lambdaの配置先
 packages/
-  contracts/           共有型（現在は状態・根拠種別のみ）
-  domain/              局面再構成・計算の配置先
+  contracts/           共通型・学習画面JSON契約／検証
+  domain/              学習画面の計算・戦略条件照合
   parser/              MTTパーサーの配置先
-infra/                 AWS CDKの配置先
+infra/                 共通Web配信のAWS CDK
 tests/
   acceptance/          横断受入テストの配置先
   fixtures/            匿名化履歴・期待結果の配置先
 legacy/python/         既存Streamlit試作・既存テスト
 ```
 
-配置先には責務を説明するREADMEを置いています。実装・依存パッケージは機能ごとに追加します。
+各配置先のREADMEに実装範囲と未実施項目を記録しています。認証・API・worker・MTT parserは後続で追加します。
 
 ## TypeScript開発基盤
 
-Node.js 22、npmを使用します。nvmを使う場合は `nvm use` で切り替えます。
+Node.js 22.12以降（Node 22推奨）、npmを使用します。nvmを使う場合は `nvm use` で切り替えます。
 
 ```bash
 npm ci
@@ -45,7 +45,7 @@ npm run check
 ```
 
 npm workspaces、strict型検査、ロックファイル、CIを導入済みです。
-現在の `check` は型検査と学習用サイトの構文検査・既存6テストです。アプリの起動・ビルド・機能テストは各機能の実装時に追加します。
+`check` は型検査、取込元の構文・6テスト、新規単体13テスト、Reactビルド、Chromium操作6テストを実行します。初回は `npx playwright install chromium` が必要です。
 TypeScript統一の理由と移行範囲は[ADR-0001](docs/architecture/decisions/0001-typescript.md)を参照してください。
 
 ## Python試作

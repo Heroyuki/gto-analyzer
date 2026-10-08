@@ -1,0 +1,1 @@
+{"extends":"../tsconfig.json","compilerOptions":{"exactOptionalPropertyTypes":false},"include":["src/**/*.ts","tests/**/*.ts"]}

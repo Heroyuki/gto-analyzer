@@ -4,7 +4,7 @@
 
 | ID | 機能 | 設計節 | 実装予定先 | 状態 |
 | --- | --- | --- | --- | --- |
-| [SPOT-001](SPOT-001-visualizer.md) | 学習画面のGit・AWS移行 | 移行設計 | legacy/poker-spot、apps/web、packages/domain、infra | Draft・AWS設定と数値精度未確定 |
+| [SPOT-001](SPOT-001-visualizer.md) | 学習画面のGit・AWS移行 | 移行設計 | legacy/poker-spot、apps/web、packages/domain、infra | Implemented・ローカル検証済み／AWS実設定・受入待ち |
 | [SPOT-002](SPOT-002-git-import.md) | 既存サイトのGit取り込み | 移行設計 | legacy/poker-spot | Verified |
 | PARSE-001 | MTT解析・局面再構成 | §5–6、13 | packages/parser、packages/domain | Draft・実MTT fixture待ち |
 | AUTH-001 | 認証・アカウント分離 | §4、7、9 | apps/api、infra | 未着手 |
