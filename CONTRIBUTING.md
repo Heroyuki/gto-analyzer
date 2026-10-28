@@ -20,6 +20,8 @@
 - `infra`: TypeScript CDK。スタック・IAM・デプロイ設定を配置する。
 - `legacy/python`: 参照用試作。新規本番コードからimportしない。
 
+上記の依存方向は `npm run check:deps`（`scripts/check-deps.ts`）がCIで検査する。packageを追加したり依存方向を変えたりする場合は、この節とチェッカーの許可表を同じ変更で更新する。
+
 各配置先で実装を始める際にprivateなpackage.jsonと必要なsrc/testsを追加する。ルートnpm workspacesで依存を管理し、package-lock.jsonも更新する。
 単体テストは各パッケージの `tests/`、複数アプリをまたぐ受入テストはルート `tests/acceptance/` に置く。
 
@@ -32,5 +34,7 @@ python3 -m pytest legacy/python/tests -q
 git diff --check
 ```
 
-CIはTypeScript型検査、学習画面の単体・Chromium受入テスト、Webビルド、架空dev設定でのCDK synthとPython試作テストを実行する。新規機能を追加したら対応するテストコマンドをCIにも追加する。MTT・認可・AWS統合試験の完了を現在のCI成功から推定しない。
+CIはTypeScript型検査、依存方向の検査、学習画面の単体・Chromium受入テスト、Webビルド、架空dev設定でのCDK synthとPython試作テストを実行する。新規機能を追加したら対応するテストコマンドをCIにも追加する。MTT・認可・AWS統合試験の完了を現在のCI成功から推定しない。
+UIの変更は起動して確認する。`npm run dev:web` の起動中に `npm run inspect:web -- --width 390` を実行すると、スクリーンショット・アクセシビリティツリー・実行時エラー・外部通信・横溢れを確認できる。手順と機能の地図は `.claude/skills/verify-web/` に置く。
+レビューで同じ指摘を繰り返す場合は、lint・テスト・`check:deps` のどれかで検出できるようにする。
 実データをfixtureにする前にプレイヤー名・個人情報を匿名化し、APIキーや生の履歴をコミットしない。
