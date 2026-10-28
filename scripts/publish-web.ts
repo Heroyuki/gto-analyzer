@@ -7,7 +7,7 @@ import { createManifest, verifyManifest } from './release.js';
 const args = process.argv.slice(2);
 function option(name: string) { const index = args.indexOf(name); return index < 0 ? undefined : args[index + 1]; }
 const outputsPath = option('--outputs'), release = option('--release'), profile = option('--profile');
-if (!outputsPath || !release || !/^[a-f0-9]{40}$/.test(release)) throw new Error('Usage: npm run deploy:web -- --outputs infra/cdk-outputs.json --release <40-char SHA> [--profile default] [--rollback]');
+if (!outputsPath || !release || !/^[a-f0-9]{40}$/.test(release)) throw new Error('Usage: npm run deploy:web -- --outputs infra/cdk-outputs.json --release <40-char SHA> [--profile poker] [--rollback]');
 const outputs = JSON.parse(readFileSync(resolve(outputsPath), 'utf8')) as Record<string, { BucketName?: string; DistributionId?: string }>;
 const stack = outputs.GtoAnalyzerSpotDev;
 if (!stack?.BucketName || !stack.DistributionId || !/^[a-z0-9.-]+$/.test(stack.BucketName) || !/^[A-Z0-9]+$/.test(stack.DistributionId)) throw new Error('CDK outputsが不正です。');

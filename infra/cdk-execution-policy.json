@@ -1,0 +1,54 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "WebBucket",
+      "Effect": "Allow",
+      "Action": "s3:*",
+      "Resource": "arn:aws:s3:::gtoanalyzerspotdev-*"
+    },
+    {
+      "Sid": "CloudFront",
+      "Effect": "Allow",
+      "Action": [
+        "cloudfront:*Distribution*",
+        "cloudfront:*Function*",
+        "cloudfront:*CachePolicy*",
+        "cloudfront:*ResponseHeadersPolicy*",
+        "cloudfront:*OriginAccessControl*",
+        "cloudfront:TagResource",
+        "cloudfront:UntagResource",
+        "cloudfront:ListTagsForResource"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "Budget",
+      "Effect": "Allow",
+      "Action": ["budgets:ViewBudget", "budgets:ModifyBudget", "budgets:TagResource", "budgets:UntagResource", "budgets:ListTagsForResource"],
+      "Resource": "arn:aws:budgets::*:budget/GtoAnalyzerSpotDev-*"
+    },
+    {
+      "Sid": "Dashboard",
+      "Effect": "Allow",
+      "Action": ["cloudwatch:GetDashboard", "cloudwatch:PutDashboard", "cloudwatch:DeleteDashboards", "cloudwatch:TagResource", "cloudwatch:UntagResource", "cloudwatch:ListTagsForResource"],
+      "Resource": "arn:aws:cloudwatch::*:dashboard/GtoAnalyzerSpotDev-*"
+    },
+    {
+      "Sid": "GithubDeployRole",
+      "Effect": "Allow",
+      "Action": [
+        "iam:GetRole",
+        "iam:CreateRole",
+        "iam:DeleteRole",
+        "iam:UpdateAssumeRolePolicy",
+        "iam:GetRolePolicy",
+        "iam:PutRolePolicy",
+        "iam:DeleteRolePolicy",
+        "iam:TagRole",
+        "iam:UntagRole"
+      ],
+      "Resource": "arn:aws:iam::*:role/GtoAnalyzerSpotDev-*"
+    }
+  ]
+}
