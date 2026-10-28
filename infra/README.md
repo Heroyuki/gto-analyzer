@@ -23,14 +23,16 @@ npm run synth:dev -- -c config=infra/dev.example.json --no-lookups --quiet
 
 ## 初回構築
 
-defaultプロファイルのアカウントを読み取り確認済み（2026-10-03）。SSO等の期限切れ時は既存のログイン手順で更新する。以下は設定確定・差分確認後に実行する手順であり、構築済みの記録ではない。
+デプロイ先はpoker用アカウントで、AWS CLIのSSOプロファイル`poker`（操作用）と`poker-readonly`（読み取り確認用）を使う。`default`プロファイルは別用途のアカウントを向いているため、このリポジトリの手順では使わない。`--profile`を省略するとdefaultへ実行されるので、必ず明示する。SSOの期限切れ時は`aws sso login --sso-session personal`で更新する。以下は設定確定・差分確認後に実行する手順であり、構築済みの記録ではない。
+
+実行前に`get-caller-identity`の`Account`が`dev.local.json`の`account`と一致することを確認する。
 
 ```bash
-aws sts get-caller-identity --profile default
-npx cdk bootstrap aws://<account>/ap-northeast-1 --profile default --cloudformation-execution-policies <approved-policy-arn>
+aws sts get-caller-identity --profile poker
+npx cdk bootstrap aws://<account>/ap-northeast-1 --profile poker --cloudformation-execution-policies <approved-policy-arn>
 npm run synth:dev -- -c config=infra/dev.local.json --no-lookups
-npx cdk diff --app cdk.out --profile default --no-change-set
-npx cdk deploy --app cdk.out --profile default --outputs-file infra/cdk-outputs.json
+npx cdk diff --app cdk.out --profile poker --no-change-set
+npx cdk deploy --app cdk.out --profile poker --outputs-file infra/cdk-outputs.json
 ```
 
 CDK bootstrapのCloudFormation実行ポリシーは、このdev環境のS3・CloudFront・Budgets・CloudWatch・任意IAMロールに必要な権限へ管理者が限定する。デフォルトのAdministratorAccessを最小権限として扱わない。bootstrapの変更は他のCDKスタックへ影響し得るため既存構成を確認する。[AWS bootstrapの権限説明](https://docs.aws.amazon.com/cdk/v2/guide/best-practices-security.html)
@@ -42,9 +44,9 @@ Web bucketは非公開・TLS必須・Versioning有効・削除時RETAIN。CloudF
 配信前に変更をレビュー済みコミットへまとめ、指定SHAのclean checkoutで`npm run check`を実行する。現在の作業ツリーはユーザーの既存変更を含むため、勝手にコミット・pushしない。
 
 ```bash
-npm run deploy:web -- --outputs infra/cdk-outputs.json --release <40-character-SHA> --profile default
+npm run deploy:web -- --outputs infra/cdk-outputs.json --release <40-character-SHA> --profile poker
 # 直前の検証済みSHAへ、静的成果物だけを復旧
-npm run deploy:web -- --outputs infra/cdk-outputs.json --release <previous-SHA> --profile default --rollback
+npm run deploy:web -- --outputs infra/cdk-outputs.json --release <previous-SHA> --profile poker --rollback
 npm run smoke:aws -- https://<domain>.cloudfront.net <bucket-name> 200
 ```
 
