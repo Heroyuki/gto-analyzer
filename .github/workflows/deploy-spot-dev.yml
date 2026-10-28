@@ -48,7 +48,7 @@ jobs:
         run: |
           node -e 'const fs=require("node:fs"); fs.writeFileSync("infra/dev.local.json", process.env.DEV_CONFIG_JSON)'
       - run: npm run synth:dev -- -c config=infra/dev.local.json --no-lookups --quiet
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ap-northeast-1
