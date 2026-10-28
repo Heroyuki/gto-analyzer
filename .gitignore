@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+cdk.out/
+.env
+.env.*
+!.env.example
+.DS_Store
+playwright-report/
+test-results/
+infra/dev.local.json
+infra/cdk-outputs.json

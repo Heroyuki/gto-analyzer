@@ -1,0 +1,75 @@
+name: Deploy shared web to AWS dev
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: Tested 40-character commit SHA (must belong to the dev-approved branch)
+        required: true
+      rollback:
+        description: Restore an archived release instead of uploading a new one
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: gto-analyzer-aws-dev
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: dev
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate requested SHA
+        env:
+          RELEASE_SHA: ${{ inputs.commit }}
+          APPROVED_BRANCH: ${{ vars.DEV_DEPLOY_BRANCH }}
+        run: |
+          [[ "$RELEASE_SHA" =~ ^[a-f0-9]{40}$ ]]
+          test -n "$APPROVED_BRANCH"
+          git check-ref-format --branch "$APPROVED_BRANCH"
+          git merge-base --is-ancestor "$RELEASE_SHA" "origin/$APPROVED_BRANCH"
+          git checkout --detach "$RELEASE_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run check
+      - name: Create dev config
+        env:
+          DEV_CONFIG_JSON: ${{ secrets.AWS_DEV_CONFIG_JSON }}
+        run: |
+          node -e 'const fs=require("node:fs"); fs.writeFileSync("infra/dev.local.json", process.env.DEV_CONFIG_JSON)'
+      - run: npm run synth:dev -- -c config=infra/dev.local.json --no-lookups --quiet
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ap-northeast-1
+      - name: Show infrastructure changes
+        if: ${{ !inputs.rollback }}
+        run: npx cdk diff --app cdk.out --no-change-set
+      - name: Deploy infrastructure
+        if: ${{ !inputs.rollback }}
+        run: npx cdk deploy --app cdk.out --require-approval never --outputs-file infra/cdk-outputs.json
+      - name: Read current outputs for asset rollback
+        if: ${{ inputs.rollback }}
+        run: |
+          aws cloudformation describe-stacks --stack-name GtoAnalyzerSpotDev --query 'Stacks[0].Outputs' > /tmp/gto-stack-outputs.json
+          node -e 'const fs=require("node:fs"); const outputs=JSON.parse(fs.readFileSync("/tmp/gto-stack-outputs.json","utf8")); fs.writeFileSync("infra/cdk-outputs.json", JSON.stringify({GtoAnalyzerSpotDev:Object.fromEntries(outputs.map(o=>[o.OutputKey,o.OutputValue]))}))'
+      - name: Publish release
+        env:
+          RELEASE_SHA: ${{ inputs.commit }}
+          ROLLBACK: ${{ inputs.rollback }}
+        run: |
+          if [ "$ROLLBACK" = "true" ]; then
+            npm run deploy:web -- --outputs infra/cdk-outputs.json --release "$RELEASE_SHA" --rollback
+          else
+            npm run deploy:web -- --outputs infra/cdk-outputs.json --release "$RELEASE_SHA"
+          fi

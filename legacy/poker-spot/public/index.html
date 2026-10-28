@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#101719" />
+  <meta name="description" content="カードとスタックを操作して、SPRとポットオッズを視覚的に学ぶポーカー学習ツール。" />
+  <title>Poker Spot Visualizer</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23101719'/%3E%3Ctext x='32' y='49' text-anchor='middle' font-size='49' fill='%238ee0b3'%3E%E2%99%A0%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./style.css" />
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="./" aria-label="Poker Spot Visualizer ホーム"><span class="brand-mark">♠</span><span>POKER SPOT<span class="brand-sub">VISUALIZER / STUDY LAB</span></span></a>
+    <nav class="header-actions" aria-label="データ操作"><button id="reset" class="quiet">初期スポット</button><button id="open-json" class="button">JSON 入出力</button></nav>
+  </header>
+  <main>
+    <div class="page-heading"><div><div class="eyebrow">SPOT EXPLORER</div><h1>局面を、動かして理解する。</h1></div><span class="format-label">NLH · HEADS UP · chipEV</span></div>
+    <div class="workspace">
+      <section class="visual-area" aria-label="ポーカー卓と計算結果">
+        <div class="metrics"><div><span>現在の SPR</span><strong id="spr">17.73</strong><small>実効スタック ÷ ポット</small></div><div><span>ポット</span><strong><b id="pot-output">5.5</b><em>bb</em></strong><small>ベット前</small></div><div><span>実効スタック</span><strong><b id="effective">97.5</b><em>bb</em></strong><small>両者の残りスタックの小さい方</small></div></div>
+        <div class="table-area">
+          <div class="table-heading"><span id="street-label">FLOP</span><span>BTN vs BB</span></div>
+          <div class="poker-table">
+            <div class="felt-ring"></div>
+            <div class="player opponent"><div class="hole-cards mini"><span class="card-back"></span><span class="card-back"></span></div><div class="seat"><span class="position">BB</span><span><strong id="bb-stack-display">97.5</strong> bb</span></div><span class="seat-note">OUT OF POSITION</span></div>
+            <div class="board-center"><div class="pot-chip">POT <strong id="table-pot">5.5 bb</strong></div><div id="board" class="board" aria-label="ボード"></div><span class="board-caption">カードをタップして変更</span></div>
+            <div class="player hero"><div id="hero-cards" class="hole-cards"></div><div class="seat"><span class="position">BTN</span><span><strong id="btn-stack-display">97.5</strong> bb</span><span class="dealer" aria-label="ディーラー">D</span></div><span id="hand-category" class="seat-note"></span></div>
+          </div>
+          <div class="table-footer"><span><i class="small-line"></i>残りスタックを表示</span><button id="clear-later" class="text-button">フロップに戻す</button></div>
+        </div>
+        <div class="insight"><span class="insight-icon">÷</span><p id="spr-explanation"></p></div>
+      </section>
+      <aside class="control-panel">
+        <div class="panel-top"><span class="eyebrow">SCENARIO</span><span class="unit">単位：bb</span></div><h2>スポット設定</h2>
+        <label class="field"><span>ベット前のポット</span><div class="number-wrap"><input id="pot" type="number" min="0.1" max="100000" step="0.1" value="5.5" inputmode="decimal" /><span>bb</span></div></label>
+        <div class="two-fields"><label class="field"><span>BTN 残り</span><div class="number-wrap"><input id="btn-stack" type="number" min="0" max="100000" step="0.5" value="97.5" inputmode="decimal" /><span>bb</span></div></label><label class="field"><span>BB 残り</span><div class="number-wrap"><input id="bb-stack" type="number" min="0" max="100000" step="0.5" value="97.5" inputmode="decimal" /><span>bb</span></div></label></div>
+        <div class="preset-label">両者の残りを設定</div><div class="chips" id="stack-presets"><button data-stack="20">20 bb</button><button data-stack="40">40 bb</button><button data-stack="97.5">97.5 bb</button></div>
+        <div class="control-divider"></div><div class="section-title"><h2>ベットを試す</h2><span class="subtle">BTN → BB</span></div>
+        <div class="bet-size-heading"><label for="bet-slider">ポットに対するサイズ</label><strong id="bet-percent">33%</strong></div><input id="bet-slider" type="range" min="0" max="200" step="1" value="33" aria-label="ベットサイズ（ポット比率%）" />
+        <div id="bet-presets" class="chips bet-chips"><button data-bet="33">33%</button><button data-bet="50">50%</button><button data-bet="67">67%</button><button data-bet="100">100%</button><button data-bet="all">All-in</button></div>
+        <div class="bet-amount"><span>実効ベット額</span><strong><span id="bet-amount">1.82</span><small> bb</small></strong></div><p id="bet-cap" class="secondary-note"></p>
+        <div class="odds-result"><div><span>BBのコール必要勝率</span><strong id="required-equity">19.88<small>%</small></strong></div><div class="equity-track"><span id="equity-fill"></span></div><div class="result-row"><span>コール後のポット</span><b id="after-pot"></b></div><div class="result-row"><span>コール後のSPR</span><b id="after-spr"></b></div></div>
+        <details class="formula"><summary>計算式と前提</summary><p>必要勝率 = コール額 ÷ コール後のポット<br>コール後のSPR = 残り実効スタック ÷ コール後のポット</p><p>ヘッズアップでBBがチェックし、BTNがベットする場面です。未コールの超過分は除外。レーキ・ICM・将来のベットは含みません。必要勝率は追加投資がない場合の損益分岐点です。</p></details>
+      </aside>
+    </div>
+    <section class="strategy-section" aria-labelledby="strategy-title">
+      <div class="strategy-heading"><div><div class="eyebrow">STRATEGY VIEW</div><h2 id="strategy-title">レンジとアクション</h2></div><span id="source-badge" class="badge demo">説明用サンプル</span></div>
+      <div id="strategy-note" class="strategy-note"></div>
+      <div class="strategy-layout"><div class="range-panel"><div class="range-toolbar"><div class="tabs" aria-label="表示するプレイヤー"><button id="tab-btn" class="active" aria-pressed="true">BTN</button><button id="tab-bb" aria-pressed="false">BB</button></div><span id="node-label" class="subtle"></span></div><div id="range-grid" class="range-grid" aria-label="ハンド別アクション頻度"></div><div class="range-legend"><span><i class="legend-empty"></i>データなし</span><span>色の割合＝アクション頻度</span></div></div>
+      <div class="action-panel"><div class="action-title"><h3 id="action-title">レンジ全体</h3><button id="whole-range" class="text-button" hidden>全体に戻す</button></div><p id="action-subtitle" class="secondary-note"></p><div id="action-bars"></div><div id="hand-detail" class="hand-detail"></div><div class="learning-note"><strong>SPRだけで、コミットは決まらない。</strong><p>同じSPRでも、相手のレンジと自分のエクイティで判断は変わります。ボードやスタックを変更した後の戦略は、その条件のソルバー結果を取り込んで確認します。</p></div></div></div>
+    </section>
+    <footer><span>POKER SPOT / STUDY LAB</span><span>計算はリアルタイム · 戦略は取込データ</span></footer>
+  </main>
+  <dialog id="card-dialog"><div class="dialog-head"><div><span class="eyebrow">CARD SELECTOR</span><h2 id="card-title">カードを選択</h2></div><button class="close" data-close="card-dialog" aria-label="閉じる">×</button></div><div id="deck" class="deck"></div><button id="remove-card" class="button" hidden>このストリート以降を削除</button></dialog>
+  <dialog id="json-dialog" class="json-dialog"><div class="dialog-head"><div><span class="eyebrow">SPOT DATA</span><h2>JSON 入出力</h2></div><button class="close" data-close="json-dialog" aria-label="閉じる">×</button></div><p>このアプリの共通形式で、局面とソルバー結果を取り込めます。各ソルバーの生データは、この形式への変換が必要です。</p><div class="json-tools"><button id="download-json" class="button">現在の局面を保存</button><button id="load-template" class="quiet">サンプルを表示</button><label class="button file-label">ファイルを選択<input id="json-file" type="file" accept=".json,application/json" /></label></div><label for="json-text">JSON データ</label><textarea id="json-text" spellcheck="false" aria-describedby="json-message"></textarea><p id="json-message" role="status"></p><div class="dialog-bottom"><span class="secondary-note">取り込むと、現在の局面を置き換えます。</span><button id="import-json" class="primary">取り込む</button></div><details class="schema-help"><summary>データ形式について</summary><p>schemaVersion: 1。spotにはboard（3〜5枚）、pot、stacks.BTN / BB、hero（2枚）、betPercentを指定します。カードはJh / 8d / Asのように記述します。</p><p>strategyは省略可能です。source.kindはdemo または solver、source.labelは出典名。players.BTN / BBにnode、actions、handsを設定します。BBにはfacingBetPercentが必須。actionsのfrequencyとhands内のfrequenciesは0〜100で、合計100にします。handsはAA / AKs / AKoなどの169分類です。サンプルを表示すると完全な構造を確認できます。</p><p>取り込んだ戦略は、そのボード・ポット・スタックに紐づきます。条件が変わると表示を保留します。外部APIへの接続やGTOの再計算は行いません。</p></details></dialog>
+  <div id="toast" class="toast" role="status"></div>
+</body>
+</html>

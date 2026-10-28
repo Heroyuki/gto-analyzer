@@ -1,0 +1,1 @@
+{"name":"@gto-analyzer/domain","version":"0.0.0","private":true,"type":"module","exports":{"./spot":"./src/spot/index.ts"},"dependencies":{"@gto-analyzer/contracts":"0.0.0"}}

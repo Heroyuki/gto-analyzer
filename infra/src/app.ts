@@ -1,0 +1,10 @@
+import { readFileSync } from 'node:fs';
+import { App, Tags } from 'aws-cdk-lib';
+import { SpotDevStack, validateConfig } from './spot-stack.js';
+const app = new App();
+const configPath: unknown = app.node.tryGetContext('config');
+if (typeof configPath !== 'string') throw new Error('設定ファイルを -c config=/absolute/path/to/dev.json で指定してください。infra/dev.example.json参照。');
+const config = validateConfig(JSON.parse(readFileSync(configPath, 'utf8')));
+const stack = new SpotDevStack(app, 'GtoAnalyzerSpotDev', config);
+Tags.of(stack).add('Project', 'gto-analyzer');
+Tags.of(stack).add('Environment', 'dev');
