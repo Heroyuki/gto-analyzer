@@ -45,7 +45,7 @@ npm run check
 ```
 
 npm workspaces、strict型検査、ロックファイル、CIを導入済みです。
-`check` は型検査、取込元の構文・6テスト、新規単体13テスト、Reactビルド、Chromium操作6テストを実行します。初回は `npx playwright install chromium` が必要です。
+`check` は型検査、依存方向の検査、取込元の構文・6テスト、新規単体16テスト、Reactビルド、Chromium操作6テストを実行します。初回は `npx playwright install chromium` が必要です。
 TypeScript統一の理由と移行範囲は[ADR-0001](docs/architecture/decisions/0001-typescript.md)を参照してください。
 
 ## Python試作

@@ -13,7 +13,9 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit && tsc --noEmit -p infra/tsconfig.json",
-    "check": "npm run typecheck && npm run check:spot && npm run test:spot && npm run test:unit && npm run build:web && npm run test:web",
+    "check:deps": "node --import tsx scripts/check-deps.ts",
+    "inspect:web": "node --import tsx scripts/inspect-web.ts",
+    "check": "npm run typecheck && npm run check:deps && npm run check:spot && npm run test:spot && npm run test:unit && npm run build:web && npm run test:web",
     "dev:spot": "npm --prefix legacy/poker-spot run dev",
     "check:spot": "npm --prefix legacy/poker-spot run check",
     "test:spot": "npm --prefix legacy/poker-spot test",
