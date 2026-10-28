@@ -29,13 +29,14 @@ npm run synth:dev -- -c config=infra/dev.example.json --no-lookups --quiet
 
 ```bash
 aws sts get-caller-identity --profile poker
-npx cdk bootstrap aws://<account>/ap-northeast-1 --profile poker --cloudformation-execution-policies <approved-policy-arn>
+aws iam create-policy --policy-name GtoAnalyzerCdkExecution --policy-document file://infra/cdk-execution-policy.json --profile poker
+npx cdk bootstrap aws://<account>/ap-northeast-1 --profile poker --cloudformation-execution-policies arn:aws:iam::<account>:policy/GtoAnalyzerCdkExecution
 npm run synth:dev -- -c config=infra/dev.local.json --no-lookups
 npx cdk diff --app cdk.out --profile poker --no-change-set
 npx cdk deploy --app cdk.out --profile poker --outputs-file infra/cdk-outputs.json
 ```
 
-CDK bootstrapのCloudFormation実行ポリシーは、このdev環境のS3・CloudFront・Budgets・CloudWatch・任意IAMロールに必要な権限へ管理者が限定する。デフォルトのAdministratorAccessを最小権限として扱わない。bootstrapの変更は他のCDKスタックへ影響し得るため既存構成を確認する。[AWS bootstrapの権限説明](https://docs.aws.amazon.com/cdk/v2/guide/best-practices-security.html)
+CDK bootstrapのCloudFormation実行ポリシーは、このdev環境のS3・CloudFront・Budgets・CloudWatch・任意IAMロールに必要な権限へ限定した[cdk-execution-policy.json](cdk-execution-policy.json)を使う。スタックに新しいリソース種別を追加したら、このポリシーも更新して`aws iam create-policy-version`で反映する。2026-10-28にpokerアカウントでこのポリシーを使ってbootstrap済み。デフォルトのAdministratorAccessを最小権限として扱わない。bootstrapの変更は他のCDKスタックへ影響し得るため既存構成を確認する。[AWS bootstrapの権限説明](https://docs.aws.amazon.com/cdk/v2/guide/best-practices-security.html)
 
 Web bucketは非公開・TLS必須・Versioning有効・削除時RETAIN。CloudFront REST originはOACを使い、全リクエストのviewer-requestでIP検査する。欠損アセットをindex.htmlへ変換しない。CloudWatch dashboardはCloudFrontの`us-east-1`メトリクス（requests / 5xx）を表示する。CloudFront標準ドメインの証明書を使用し、独自証明書でのTLSポリシー設定はまだ行わない。
 
